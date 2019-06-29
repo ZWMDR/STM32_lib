@@ -3,7 +3,7 @@
 ### NOTICE
 
 - This function library is only appropriate for **STM32F103RCT6**.
-- Please [contact me](953799126lxc@gmail.com) if there’s any mistakes.
+- Please contact me at 953799126lxc@gmail.com if there’s any mistakes.
 - This library will be continue to be updated.
 
 ### CONTENT
