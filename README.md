@@ -9,8 +9,8 @@
 ### CONTENT
 
 - **ADC_input**
-    - ADC连续采样，扫描模式/非扫描模式
-    - ADC单次采用
+    - 定时器触发ADC稳定频率（2.5kHz或5kHz）连续采样，扫描模式/非扫描模式，DMA
+    - ADC单次采样
 - **PID_control**
     - 增量式PID闭环反馈
 - **PWM_input_capture**
