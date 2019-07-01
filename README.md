@@ -24,11 +24,14 @@
     - SPI定时连续收发（DMA+TIM方式）
     - SPI单次收发（发送手动调用函数发送，接收使用中断方式）
 - **SPWM_output**
-    - 单极性SPWM脉宽调制输出
-    - 双极性SPWM脉宽调制输出
-- DSP_lib
+    - 单极性SPWM脉宽调制输出（磨平衡/非磨平衡）
+    - 双极性SPWM脉宽调制输出z
+- **DSP_lib**
     - ST官方DSP函数库
     - 基4FFT
     - IIR滤波器
     - PID调控
+- **infrared_remote**
+    - 红外遥控
+    - 自定义按键功能
 
