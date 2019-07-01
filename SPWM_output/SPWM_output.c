@@ -95,21 +95,41 @@ void TIM6_IRQHandler(void)
 
 void PWM_Set_duty(float rate,u16* t,u8 mode)
 {
-	if(!mode)
-		TIM_SetCompare2(TIM8,1800+Sin[*t]*rate);
-	else
+	static u8 status=0;
+	if(mode==0)//单极性输出
 	{
-		if(Sin[*t]>=0)
-		{
-			TIM_SetCompare2(TIM8,Sin[*t]*rate);
+		TIM_SetCompare2(TIM8,(1799+Sin[*t])*rate);
+		if(Sin[*t]>=1799)
 			TIM_SetCompare1(TIM8,0);
+		else
+			TIM_SetCompare1(TIM8,3599);
+	}
+	else if(mode==1)
+	{
+		if(status==0)
+		{
+			status=1;
+			TIM_SetCompare2(TIM8,(1799+Sin[*t])*rate);
+			if(Sin[*t]>=1799)
+				TIM_SetCompare1(TIM8,0);
+			else
+				TIM_SetCompare1(TIM8,3599);
 		}
 		else
 		{
-			TIM_SetCompare1(TIM8,-Sin[*t]*rate);
-			TIM_SetCompare2(TIM8,0);
+			status=0;
+			TIM_SetCompare1(TIM8,(1799+Sin[*t])*rate);
+			if(Sin[*t]>=1799)
+				TIM_SetCompare2(TIM8,0);
+			else
+				TIM_SetCompare2(TIM8,3599);
 		}
-}
-	*t=((*t)+1)%400;
+	}
+	else//双极性输出
+	{
+		TIM_SetCompare1(TIM8,0);
+		TIM_SetCompare2(TIM8,(1799+Sin[*t])*rate);
+	}
+	*t=((*t)+1)%SINTABLE_LEN;
 }
 
