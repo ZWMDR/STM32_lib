@@ -19,10 +19,16 @@
 - **sp_math**
     - 数学函数库
     - 峰峰值
+    - 视在功率/有功功率/有效值
 - **SPI_DMA**
     - SPI定时连续收发（DMA+TIM方式）
     - SPI单次收发（发送手动调用函数发送，接收使用中断方式）
 - **SPWM_output**
     - 单极性SPWM脉宽调制输出
     - 双极性SPWM脉宽调制输出
+- DSP_lib
+    - ST官方DSP函数库
+    - 基4FFT
+    - IIR滤波器
+    - PID调控
 
