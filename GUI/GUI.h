@@ -120,13 +120,56 @@ typedef struct GUI_MsgWindow_InitTypeDef
 	
 }GUI_MW_InitTypeDef;
 
+/*---------------------菜单栏------------------------*/
+
+typedef struct GUI_Menu_catalog_table//菜单内容
+{
+	char* content;
+	u8 size;//字号
+	u8 length;//字符长度
+	u16 xcoord;
+	u16 ycoord;
+	
+}GUI_catalog_table;
+
+typedef struct GUI_Menu_InitTypeDef
+{
+	//菜单窗口参数
+	u16 start_xcoord;
+	u16 start_ycoord;
+	u16 end_xcoord;
+	u16 end_ycoord;
+	
+	//背景颜色、选中颜色
+	u16 back_color;
+	u16 point_color;
+	u16 select_back_color;
+	u16 select_point_color;
+	
+	//显示外框
+	u8 show_frame;
+	u8 frame_mode;
+	/*--------------
+	0: 不显示外框
+	1: 单层外框
+	2: 双层外框
+	11:单层虚线外框
+	12:双层虚线外框
+	--------------*/
+	u16 frame_color;
+	
+	//菜单内容
+	u8 table_num;//菜单数目
+	GUI_catalog_table* catalog_tables;//具体内容
+	
+}GUI_Menu_InitTypeDef;
 
 void GUI_Init(void);
+void GUI_clear(void);//清屏
 void GUI_WaveWindow_Init(GUI_WW_InitTypeDef *GUI_WW);//GUI波形视窗初始化
 void GUI_MsgWindow_Init(GUI_MW_InitTypeDef* GUI_MW); //GUI信息视窗初始化
 
 //菜单
-void Level1_Menu(u8 select_status);
-void Level2_Menu(u8 select_status);
+u8 GUI_Menu_Init(GUI_Menu_InitTypeDef* Menu);
 
 #endif

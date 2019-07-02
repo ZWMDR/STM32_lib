@@ -11,14 +11,22 @@ void GUI_Init(void)
 	LCD_ShowString(68,306,200,12,12,"Designed by ZWMDR");
 }
 
+void GUI_clear(void)
+{
+	LCD_Fill(0,0,240,305,WHITE);
+	LCD_Fill(0,305,240,320,MAGENTA);
+	POINT_COLOR=WHITE;
+	BACK_COLOR=MAGENTA;
+	LCD_ShowString(68,306,200,12,12,"Designed by ZWMDR");
+}
 
 
-void draw_consistant_FullLine(u16 start_xcoord,u16 end_xcoord,u16 ycoord)//横向贯通实线
+void draw_consistant_FullLine(u16 start_xcoord,u16 end_xcoord,u16 ycoord)//横向实线
 {
 	LCD_DrawLine(start_xcoord,ycoord,end_xcoord,ycoord);
 }
 
-void draw_consistant_ImaginaryLine(u16 start_xcoord,u16 end_xcoord,u16 ycoord)//横向贯通虚线
+void draw_consistant_ImaginaryLine(u16 start_xcoord,u16 end_xcoord,u16 ycoord)//横向虚线
 {
 	u16 i;
 	for(i=start_xcoord;i<end_xcoord;i+=4)
@@ -27,12 +35,12 @@ void draw_consistant_ImaginaryLine(u16 start_xcoord,u16 end_xcoord,u16 ycoord)//
 	}
 }
 
-void draw_vconsistant_FullLine(u16 xcoord,u16 start_ycoord,u16 ycoord)//纵向贯通实线
+void draw_vconsistant_FullLine(u16 xcoord,u16 start_ycoord,u16 ycoord)//纵向实线
 {
 	LCD_DrawLine(xcoord,0,xcoord,320);
 }
 
-void draw_vconsistant_ImaginaryLine(u16 xcoord,u16 start_ycoord,u16 end_ycoord)//纵向贯通虚线
+void draw_vconsistant_ImaginaryLine(u16 xcoord,u16 start_ycoord,u16 end_ycoord)//纵向虚线
 {
 	u16 i;
 	for(i=start_ycoord;i<end_ycoord;i+=4)
@@ -116,7 +124,7 @@ void GUI_WaveWindow_Init(GUI_WW_InitTypeDef *GUI_WW)//初始化波形视窗
 }
 
 
-void GUI_MsgWindow_Init(GUI_MW_InitTypeDef* GUI_MW)
+void GUI_MsgWindow_Init(GUI_MW_InitTypeDef* GUI_MW)//信息视窗初始化
 {
 	u16 i;
 	u16 xcoord;
@@ -208,36 +216,67 @@ void GUI_MsgWindow_Init(GUI_MW_InitTypeDef* GUI_MW)
 }
 
 
-
-void Level1_Menu(u8 select_status)
+u8 GUI_Menu_Init(GUI_Menu_InitTypeDef* Menu)//菜单显示初始化
 {
-	if(select_status==0)
-	{
-		POINT_COLOR=RED;
-		BACK_COLOR=WHITE;
-		LCD_ShowString(38,200,200,24,24,"Tracing Mode");
-		LCD_ShowString(38,250,200,24,24,"Clipping Mode");
-	}
-	else if(select_status==1)
-	{
-		POINT_COLOR=RED;
-		BACK_COLOR=YELLOW;
-		LCD_ShowString(38,200,200,24,24,"Tracing Mode");
-		BACK_COLOR=WHITE;
-		LCD_ShowString(38,250,200,24,24,"Clipping Mode");
-	}
-	else if(select_status==2)
-	{
-		POINT_COLOR=RED;
-		BACK_COLOR=WHITE;
-		LCD_ShowString(38,200,200,24,24,"Tracing Mode");
-		BACK_COLOR=YELLOW;
-		LCD_ShowString(38,250,200,24,24,"Clipping Mode");
-	}
-}
-
-void Level2_Menu(u8 select_status)
-{
+	u8 i;
 	
+	LCD_Fill(Menu->start_xcoord,Menu->start_ycoord,Menu->end_xcoord,Menu->end_ycoord,Menu->back_color);
+	if(Menu->show_frame==1)
+	{
+		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord);
+		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord);
+		draw_vconsistant_FullLine(Menu->start_xcoord,Menu->start_ycoord,Menu->end_ycoord);
+		draw_vconsistant_FullLine(Menu->end_ycoord,Menu->start_ycoord,Menu->end_ycoord);
+	}
+	else if(Menu->show_frame==11)
+	{
+		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord);
+		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord);
+		draw_vconsistant_ImaginaryLine(Menu->start_xcoord,Menu->start_ycoord,Menu->end_ycoord);
+		draw_vconsistant_ImaginaryLine(Menu->end_ycoord,Menu->start_ycoord,Menu->end_ycoord);
+	}
+	else if(Menu->show_frame==2)
+	{
+		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord);
+		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord+1);
+		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord);
+		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord-1);
+		draw_vconsistant_FullLine(Menu->start_xcoord,Menu->start_ycoord,Menu->end_ycoord);
+		draw_vconsistant_FullLine(Menu->start_xcoord+1,Menu->start_ycoord,Menu->end_ycoord);
+		draw_vconsistant_FullLine(Menu->end_ycoord,Menu->start_ycoord,Menu->end_ycoord);
+		draw_vconsistant_FullLine(Menu->end_ycoord-1,Menu->start_ycoord,Menu->end_ycoord);
+	}
+	else if(Menu->show_frame==12)
+	{
+		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord);
+		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord+1);
+		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord);
+		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord-1);
+		draw_vconsistant_ImaginaryLine(Menu->start_xcoord,Menu->start_ycoord,Menu->end_ycoord);
+		draw_vconsistant_ImaginaryLine(Menu->start_xcoord+1,Menu->start_ycoord,Menu->end_ycoord);
+		draw_vconsistant_ImaginaryLine(Menu->end_ycoord,Menu->start_ycoord,Menu->end_ycoord);
+		draw_vconsistant_ImaginaryLine(Menu->end_ycoord-1,Menu->start_ycoord,Menu->end_ycoord);
+	}
+	
+	for(i=0;i<Menu->table_num;i++)
+	{
+		if(Menu->catalog_tables[i].xcoord==0)
+		{
+			Menu->catalog_tables[i].xcoord=(Menu->end_xcoord-Menu->start_xcoord-Menu->catalog_tables[i].size/2*Menu->catalog_tables[i].length)/2+Menu->start_xcoord;
+		}
+		if(Menu->catalog_tables[i].ycoord==0)
+		{
+			Menu->catalog_tables[i].ycoord=(Menu->end_ycoord-Menu->start_ycoord)/Menu->table_num*i+Menu->start_ycoord;
+		}
+	}
+	
+	BACK_COLOR=Menu->back_color;
+	POINT_COLOR=Menu->point_color;
+	for(i=0;i<Menu->table_num;i++)
+	{
+		LCD_ShowString(Menu->catalog_tables[i].xcoord,Menu->catalog_tables[i].ycoord,180,Menu->catalog_tables[i].size,Menu->catalog_tables[i].size,(u8*)(Menu->catalog_tables[i].content));
+	}
+	
+	return 0;
 }
 
