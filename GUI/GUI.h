@@ -1,6 +1,7 @@
 #ifndef __GUI_H
 #define __GUI_H
 #include "lcd.h"
+#include "led.h"
 
 /*--------------------波形显示视窗------------------------*/
 
@@ -77,6 +78,7 @@ typedef struct GUI_msg_num_TypeDef
 	u8 digits_header;//标题长度
 	u8 digits_latter;//小数点前位数
 	u8 digits_former;//小数点后位数
+	u16 ycoord;
 	
 }GUI_msg_num;
 
@@ -88,6 +90,7 @@ typedef struct GUI_msg_str_TypeDef
 	
 	u8 digits_header;//标题长度
 	u8 digits_content;//内容长度
+	u16 ycoord;
 	
 }GUI_msg_str;
 
@@ -105,10 +108,11 @@ typedef struct GUI_MsgWindow_InitTypeDef
 	/*---------------
 	对齐方式
 	0：左对齐
-	中对齐
+	1: 中对齐
 	----------------*/
 	
-	u16 num;
+	u16 num_num;
+	u16 str_num;
 	u16 header_color;
 	u16 msg_color;
 	GUI_msg_num* msgs_num;
@@ -119,5 +123,10 @@ typedef struct GUI_MsgWindow_InitTypeDef
 
 void GUI_Init(void);
 void GUI_WaveWindow_Init(GUI_WW_InitTypeDef *GUI_WW);//GUI波形视窗初始化
+void GUI_MsgWindow_Init(GUI_MW_InitTypeDef* GUI_MW); //GUI信息视窗初始化
+
+//菜单
+void Level1_Menu(u8 select_status);
+void Level2_Menu(u8 select_status);
 
 #endif

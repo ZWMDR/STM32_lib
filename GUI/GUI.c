@@ -2,6 +2,17 @@
 
 u16 zoom_in[5]={0,10,100,1000,10000};
 
+void GUI_Init(void)
+{
+	LCD_Init();
+	LCD_Fill(0,305,240,320,MAGENTA);
+	POINT_COLOR=WHITE;
+	BACK_COLOR=MAGENTA;
+	LCD_ShowString(68,306,200,12,12,"Designed by ZWMDR");
+}
+
+
+
 void draw_consistant_FullLine(u16 start_xcoord,u16 end_xcoord,u16 ycoord)//横向贯通实线
 {
 	LCD_DrawLine(start_xcoord,ycoord,end_xcoord,ycoord);
@@ -38,11 +49,6 @@ void draw_arb_FullLine(u16 start_xcoord,u16 end_xcoord,u16 ycoord)//任意实线
 void draw_arb_ImaginaryLine(u16 start_xcoord,u16 end_xcoord,u16 ycoord)//任意虚线
 {
 	
-}
-
-void GUI_Init(void)
-{
-	LCD_Init();
 }
 
 void GUI_WaveWindow_Init(GUI_WW_InitTypeDef *GUI_WW)//初始化波形视窗
@@ -128,24 +134,110 @@ void GUI_MsgWindow_Init(GUI_MW_InitTypeDef* GUI_MW)
 	//数字内容
 	if(GUI_MW->alignment==0)//靠左对齐
 	{
-		ycoord=GUI_MW->start_ycoord;
-		for(i=0;i<GUI_MW->num;i++)
+		for(i=0;i<GUI_MW->num_num;i++)
 		{
+			size=GUI_MW->msgs_num[i].size;
 			xcoord=GUI_MW->start_xcoord;
-			LCD_ShowString(xcoord,ycoord,180,GUI_MW->msgs_num[i].size,GUI_MW->msgs_num[i].size,(u8*)GUI_MW->msgs_num[i].header);
-			xcoord+=size*GUI_MW->msgs_num[i].digits_header;
+			ycoord=GUI_MW->msgs_num[i].ycoord;
+			POINT_COLOR=GUI_MW->header_color;
+			LCD_ShowString(xcoord,ycoord,180,size,size,(u8*)(GUI_MW->msgs_num[i].header));
+			
+			POINT_COLOR=GUI_MW->msg_color;
+			xcoord+=size/2*GUI_MW->msgs_num[i].digits_header;
 			temp=GUI_MW->msgs_num[i].number;
 			adcx=temp;
 			LCD_ShowxNum(xcoord,ycoord,adcx,GUI_MW->msgs_num[i].digits_former,size,0);
 			temp-=adcx;
 			temp*=zoom_in[GUI_MW->msgs_num[i].digits_latter];
-			ycoord+=20;
+			xcoord+=size/2*(GUI_MW->msgs_num[i].digits_former+1);
+			LCD_ShowxNum(xcoord,ycoord,temp,GUI_MW->msgs_num[i].digits_latter,size,0);
 		}
 	}
 	else if(GUI_MW->alignment==1)//居中对齐
 	{
-		
+		for(i=0;i<GUI_MW->num_num;i++)
+		{
+			xcoord=GUI_MW->axle;
+			ycoord=GUI_MW->msgs_num[i].ycoord;
+			size=GUI_MW->msgs_num[i].size/2;
+			POINT_COLOR=GUI_MW->header_color;
+			LCD_ShowString(xcoord-GUI_MW->msgs_num[i].digits_header*size,ycoord,180,GUI_MW->msgs_num[i].size,GUI_MW->msgs_num[i].size,(u8*)GUI_MW->msgs_num[i].header);
+			
+			POINT_COLOR=GUI_MW->msg_color;
+			temp=GUI_MW->msgs_num[i].number;
+			adcx=temp;
+			LCD_ShowxNum(xcoord,ycoord,adcx,GUI_MW->msgs_num[i].digits_former,GUI_MW->msgs_num[i].size,0);
+			temp-=adcx;
+			temp*=zoom_in[GUI_MW->msgs_num[i].digits_latter];
+			xcoord+=size*(GUI_MW->msgs_num[i].digits_former+1);
+			LCD_ShowxNum(xcoord,ycoord,temp,GUI_MW->msgs_num[i].digits_latter,GUI_MW->msgs_num[i].size,0);
+		}
 	}
+	
+	//字符内容
+	if(GUI_MW->alignment==0)//靠左对齐
+	{
+		for(i=0;i<GUI_MW->str_num;i++)
+		{
+			size=GUI_MW->msgs_str[i].size;
+			xcoord=GUI_MW->start_xcoord;
+			ycoord=GUI_MW->msgs_str[i].ycoord;
+			POINT_COLOR=GUI_MW->header_color;
+			LCD_ShowString(xcoord,ycoord,180,size,size,(u8*)(GUI_MW->msgs_str[i].header));
+			
+			POINT_COLOR=GUI_MW->msg_color;
+			xcoord+=size/2*GUI_MW->msgs_str[i].digits_header;
+			LCD_ShowString(xcoord,ycoord,180,size,size,(u8*)(GUI_MW->msgs_str[i].content));
+		}
+	}
+	else if(GUI_MW->alignment==1)//居中对齐
+	{
+		for(i=0;i<GUI_MW->str_num;i++)
+		{
+			xcoord=GUI_MW->axle;
+			ycoord=GUI_MW->msgs_str[i].ycoord;
+			size=GUI_MW->msgs_str[i].size/2;
+			POINT_COLOR=GUI_MW->header_color;
+			LCD_ShowString(xcoord-GUI_MW->msgs_str[i].digits_header*size,ycoord,180,GUI_MW->msgs_num[i].size,GUI_MW->msgs_num[i].size,(u8*)GUI_MW->msgs_str[i].header);
+			
+			POINT_COLOR=GUI_MW->msg_color;
+			LCD_ShowString(xcoord,ycoord,180,GUI_MW->msgs_num[i].size,GUI_MW->msgs_num[i].size,(u8*)GUI_MW->msgs_str[i].content);
+		}
+	}
+	
+}
+
+
+
+void Level1_Menu(u8 select_status)
+{
+	if(select_status==0)
+	{
+		POINT_COLOR=RED;
+		BACK_COLOR=WHITE;
+		LCD_ShowString(38,200,200,24,24,"Tracing Mode");
+		LCD_ShowString(38,250,200,24,24,"Clipping Mode");
+	}
+	else if(select_status==1)
+	{
+		POINT_COLOR=RED;
+		BACK_COLOR=YELLOW;
+		LCD_ShowString(38,200,200,24,24,"Tracing Mode");
+		BACK_COLOR=WHITE;
+		LCD_ShowString(38,250,200,24,24,"Clipping Mode");
+	}
+	else if(select_status==2)
+	{
+		POINT_COLOR=RED;
+		BACK_COLOR=WHITE;
+		LCD_ShowString(38,200,200,24,24,"Tracing Mode");
+		BACK_COLOR=YELLOW;
+		LCD_ShowString(38,250,200,24,24,"Clipping Mode");
+	}
+}
+
+void Level2_Menu(u8 select_status)
+{
 	
 }
 
