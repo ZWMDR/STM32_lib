@@ -215,6 +215,82 @@ void GUI_MsgWindow_Init(GUI_MW_InitTypeDef* GUI_MW)//信息视窗初始化
 	
 }
 
+void GUI_MsgWindow_refresh(GUI_MW_InitTypeDef *GUI_MW)
+{
+	u16 i;
+	u16 xcoord;
+	u16 ycoord;
+	u8 size;
+	float temp;
+	short adcx;
+	
+	//数字内容
+	if(GUI_MW->alignment==0)//靠左对齐
+	{
+		for(i=0;i<GUI_MW->num_num;i++)
+		{
+			size=GUI_MW->msgs_num[i].size;
+			xcoord=GUI_MW->start_xcoord;
+			ycoord=GUI_MW->msgs_num[i].ycoord;
+			
+			POINT_COLOR=GUI_MW->msg_color;
+			xcoord+=size/2*GUI_MW->msgs_num[i].digits_header;
+			temp=GUI_MW->msgs_num[i].number;
+			adcx=temp;
+			LCD_ShowxNum(xcoord,ycoord,adcx,GUI_MW->msgs_num[i].digits_former,size,0);
+			temp-=adcx;
+			temp*=zoom_in[GUI_MW->msgs_num[i].digits_latter];
+			xcoord+=size/2*(GUI_MW->msgs_num[i].digits_former+1);
+			LCD_ShowxNum(xcoord,ycoord,temp,GUI_MW->msgs_num[i].digits_latter,size,0);
+		}
+	}
+	else if(GUI_MW->alignment==1)//居中对齐
+	{
+		for(i=0;i<GUI_MW->num_num;i++)
+		{
+			xcoord=GUI_MW->axle;
+			ycoord=GUI_MW->msgs_num[i].ycoord;
+			size=GUI_MW->msgs_num[i].size/2;
+			
+			POINT_COLOR=GUI_MW->msg_color;
+			temp=GUI_MW->msgs_num[i].number;
+			adcx=temp;
+			LCD_ShowxNum(xcoord,ycoord,adcx,GUI_MW->msgs_num[i].digits_former,GUI_MW->msgs_num[i].size,0);
+			temp-=adcx;
+			temp*=zoom_in[GUI_MW->msgs_num[i].digits_latter];
+			xcoord+=size*(GUI_MW->msgs_num[i].digits_former+1);
+			LCD_ShowxNum(xcoord,ycoord,temp,GUI_MW->msgs_num[i].digits_latter,GUI_MW->msgs_num[i].size,0);
+		}
+	}
+	
+	//字符内容
+	if(GUI_MW->alignment==0)//靠左对齐
+	{
+		for(i=0;i<GUI_MW->str_num;i++)
+		{
+			size=GUI_MW->msgs_str[i].size;
+			xcoord=GUI_MW->start_xcoord;
+			ycoord=GUI_MW->msgs_str[i].ycoord;
+			
+			POINT_COLOR=GUI_MW->msg_color;
+			xcoord+=size/2*GUI_MW->msgs_str[i].digits_header;
+			LCD_ShowString(xcoord,ycoord,180,size,size,(u8*)(GUI_MW->msgs_str[i].content));
+		}
+	}
+	else if(GUI_MW->alignment==1)//居中对齐
+	{
+		for(i=0;i<GUI_MW->str_num;i++)
+		{
+			xcoord=GUI_MW->axle;
+			ycoord=GUI_MW->msgs_str[i].ycoord;
+			size=GUI_MW->msgs_str[i].size/2;
+			
+			POINT_COLOR=GUI_MW->msg_color;
+			LCD_ShowString(xcoord,ycoord,180,GUI_MW->msgs_num[i].size,GUI_MW->msgs_num[i].size,(u8*)GUI_MW->msgs_str[i].content);
+		}
+	}
+}
+
 
 u8 GUI_Menu_Init(GUI_Menu_InitTypeDef* Menu)//菜单显示初始化
 {
@@ -307,7 +383,6 @@ u8 GUI_Menu_Init(GUI_Menu_InitTypeDef* Menu)//菜单显示初始化
 	{
 		LCD_ShowString(Menu->catalog_tables[i].xcoord,Menu->catalog_tables[i].ycoord,180,Menu->catalog_tables[i].size,Menu->catalog_tables[i].size,(u8*)(Menu->catalog_tables[i].content));
 	}
-	
 	return 0;
 }
 

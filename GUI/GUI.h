@@ -166,12 +166,18 @@ typedef struct GUI_Menu_InitTypeDef
 	
 }GUI_Menu_InitTypeDef;
 
-void GUI_Init(void);
+void GUI_Init(void);//初始化
 void GUI_clear(void);//清屏
+
+
 void GUI_WaveWindow_Init(GUI_WW_InitTypeDef *GUI_WW);//GUI波形视窗初始化
+void GUI_WaveWindow_Init(GUI_WW_InitTypeDef *GUI_WW);//GUI波形视窗刷新
+
+
 void GUI_MsgWindow_Init(GUI_MW_InitTypeDef* GUI_MW); //GUI信息视窗初始化
+void GUI_MsgWindow_refresh(GUI_MW_InitTypeDef *GUI_MW);//GUI信息视窗刷新
 
 //菜单
-u8 GUI_Menu_Init(GUI_Menu_InitTypeDef* Menu);
+u8 GUI_Menu_Init(GUI_Menu_InitTypeDef* Menu);//菜单初始化
 
 #endif
