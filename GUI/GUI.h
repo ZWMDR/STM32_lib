@@ -11,6 +11,7 @@ typedef struct GUI_WaveWindow_msg
 	u16 lst_ycoord;
 	u16 xcoord;
 	u16 ycoord;
+	u8 show;
 }WW_msg;
 
 typedef struct GUI_waveform_InitTypeDef//波形显示参数

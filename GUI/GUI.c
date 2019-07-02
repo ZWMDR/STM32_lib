@@ -134,7 +134,57 @@ void GUI_WaveWindow_refresh(GUI_WW_InitTypeDef *GUI_WW)
 	u16 i;
 	for(i=0;i<GUI_WW->num_lines;i++)
 	{
-		
+		if(GUI_WW->lines[i].msg.show)
+		{
+			//³¬³öÊÓ´°·¶Î§½ÃÕý
+			if(GUI_WW->lines[i].msg.xcoord<GUI_WW->start_xcoord)
+				GUI_WW->lines[i].msg.xcoord=GUI_WW->start_xcoord;
+			else if(GUI_WW->lines[i].msg.xcoord>GUI_WW->end_xcoord)
+				GUI_WW->lines[i].msg.xcoord=GUI_WW->end_xcoord;
+			
+			if(GUI_WW->lines[i].msg.ycoord<GUI_WW->start_ycoord)
+				GUI_WW->lines[i].msg.ycoord=GUI_WW->start_ycoord;
+			else if(GUI_WW->lines[i].msg.ycoord>GUI_WW->end_ycoord)
+				GUI_WW->lines[i].msg.ycoord=GUI_WW->end_ycoord;
+			
+			POINT_COLOR=GUI_WW->lines[i].point_color;
+			switch(GUI_WW->lines[i].wave_form)
+			{
+				case 0:
+				{
+					LCD_DrawLine(GUI_WW->lines[i].msg.lst_xcoord,GUI_WW->lines[i].msg.lst_ycoord,GUI_WW->lines[i].msg.xcoord,GUI_WW->lines[i].msg.ycoord);
+					break;
+				}
+				case 1:
+				{
+					LCD_DrawLine(GUI_WW->lines[i].msg.lst_xcoord,GUI_WW->lines[i].msg.lst_ycoord,GUI_WW->lines[i].msg.xcoord,GUI_WW->lines[i].msg.ycoord);
+					LCD_DrawLine(GUI_WW->lines[i].msg.lst_xcoord,GUI_WW->lines[i].msg.lst_ycoord+1,GUI_WW->lines[i].msg.xcoord,GUI_WW->lines[i].msg.ycoord+1);
+					break;
+				}
+				case 2:
+				{
+					
+					break;
+				}
+				case 3:
+				{
+					
+					break;
+				}
+				case 4:
+				{
+					
+					break;
+				}
+				default:
+				{
+					
+				}
+			}
+			GUI_WW->lines[i].msg.lst_xcoord=GUI_WW->lines[i].msg.xcoord;
+			GUI_WW->lines[i].msg.lst_ycoord=GUI_WW->lines[i].msg.ycoord;
+			GUI_WW->lines[i].msg.show=0;
+		}
 	}
 }
 
