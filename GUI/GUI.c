@@ -121,6 +121,21 @@ void GUI_WaveWindow_Init(GUI_WW_InitTypeDef *GUI_WW)//初始化波形视窗
 			}
 		}
 	}
+	
+	for(i=0;i<GUI_WW->num_lines;i++)
+	{
+		GUI_WW->lines[i].msg.lst_xcoord=GUI_WW->lines[i].msg.xcoord=GUI_WW->end_xcoord;
+		GUI_WW->lines[i].msg.lst_ycoord=GUI_WW->lines[i].msg.ycoord=GUI_WW->end_ycoord;
+	}
+}
+
+void GUI_WaveWindow_refresh(GUI_WW_InitTypeDef *GUI_WW)
+{
+	u16 i;
+	for(i=0;i<GUI_WW->num_lines;i++)
+	{
+		
+	}
 }
 
 

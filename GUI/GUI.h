@@ -5,11 +5,21 @@
 
 /*--------------------波形显示视窗------------------------*/
 
+typedef struct GUI_WaveWindow_msg
+{
+	u16 lst_xcoord;
+	u16 lst_ycoord;
+	u16 xcoord;
+	u16 ycoord;
+}WW_msg;
+
 typedef struct GUI_waveform_InitTypeDef//波形显示参数
 {
 	u16 point_color;
 	u8 wave_form;
 	u8 refresh_type;
+	
+	WW_msg msg;
 	
 }GUI_wf_InitTypeDef;
 /*--------------------
@@ -53,7 +63,7 @@ typedef struct GUI_WaveWindow_InitTypeDef//波形窗口参数
 	
 	//视窗线型参数
 	u16 num_lines;//视窗线型种类
-	GUI_wf_InitTypeDef *lines;//视窗线性参数
+	GUI_wf_InitTypeDef *lines;//视窗线型参数
 	
 	//中轴线
 	u8 set_axle_wire;//是否设置中轴线
@@ -171,11 +181,12 @@ void GUI_clear(void);//清屏
 
 
 void GUI_WaveWindow_Init(GUI_WW_InitTypeDef *GUI_WW);//GUI波形视窗初始化
-void GUI_WaveWindow_Init(GUI_WW_InitTypeDef *GUI_WW);//GUI波形视窗刷新
+void GUI_WaveWindow_refresh(GUI_WW_InitTypeDef *GUI_WW);//GUI波形视窗刷新
 
 
 void GUI_MsgWindow_Init(GUI_MW_InitTypeDef* GUI_MW); //GUI信息视窗初始化
 void GUI_MsgWindow_refresh(GUI_MW_InitTypeDef *GUI_MW);//GUI信息视窗刷新
+
 
 //菜单
 u8 GUI_Menu_Init(GUI_Menu_InitTypeDef* Menu);//菜单初始化
