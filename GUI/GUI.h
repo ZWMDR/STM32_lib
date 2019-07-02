@@ -153,8 +153,10 @@ typedef struct GUI_Menu_InitTypeDef
 	0: 不显示外框
 	1: 单层外框
 	2: 双层外框
+	3: 三层外框
 	11:单层虚线外框
 	12:双层虚线外框
+	13:三层虚线外框
 	--------------*/
 	u16 frame_color;
 	
