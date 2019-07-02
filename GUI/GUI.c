@@ -1,5 +1,7 @@
 #include "GUI.h"
 
+u16 zoom_in[5]={0,10,100,1000,10000};
+
 void draw_consistant_FullLine(u16 start_xcoord,u16 end_xcoord,u16 ycoord)//横向贯通实线
 {
 	LCD_DrawLine(start_xcoord,ycoord,end_xcoord,ycoord);
@@ -102,9 +104,48 @@ void GUI_WaveWindow_Init(GUI_WW_InitTypeDef *GUI_WW)//初始化波形视窗
 			{
 				draw_vconsistant_ImaginaryLine(coord,GUI_WW->start_ycoord,GUI_WW->end_ycoord);
 				coord+=GUI_WW->horizontal_gd->gd_interval;
-				
 			}
 		}
 	}
+}
+
+
+void GUI_MsgWindow_Init(GUI_MW_InitTypeDef* GUI_MW)
+{
+	u16 i;
+	u16 xcoord;
+	u16 ycoord;
+	u8 size;
+	float temp;
+	short adcx;
+	if(GUI_MW->start_xcoord>=GUI_MW->end_xcoord || GUI_MW->start_ycoord>=GUI_MW->end_ycoord)
+		return;
+	
+	//视窗范围填充
+	BACK_COLOR=GUI_MW->back_color;
+	LCD_Fill(GUI_MW->start_xcoord,GUI_MW->start_ycoord,GUI_MW->end_xcoord,GUI_MW->end_ycoord,GUI_MW->back_color);
+	
+	//数字内容
+	if(GUI_MW->alignment==0)//靠左对齐
+	{
+		ycoord=GUI_MW->start_ycoord;
+		for(i=0;i<GUI_MW->num;i++)
+		{
+			xcoord=GUI_MW->start_xcoord;
+			LCD_ShowString(xcoord,ycoord,180,GUI_MW->msgs_num[i].size,GUI_MW->msgs_num[i].size,(u8*)GUI_MW->msgs_num[i].header);
+			xcoord+=size*GUI_MW->msgs_num[i].digits_header;
+			temp=GUI_MW->msgs_num[i].number;
+			adcx=temp;
+			LCD_ShowxNum(xcoord,ycoord,adcx,GUI_MW->msgs_num[i].digits_former,size,0);
+			temp-=adcx;
+			temp*=zoom_in[GUI_MW->msgs_num[i].digits_latter];
+			ycoord+=20;
+		}
+	}
+	else if(GUI_MW->alignment==1)//居中对齐
+	{
+		
+	}
+	
 }
 

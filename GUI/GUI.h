@@ -68,10 +68,51 @@ typedef struct GUI_WaveWindow_InitTypeDef//波形窗口参数
 }GUI_WW_InitTypeDef;
 
 /*--------------------信息显示视窗------------------------*/
+typedef struct GUI_msg_num_TypeDef
+{
+	char* header;
+	float number;
+	u8 size;
+	
+	u8 digits_header;//标题长度
+	u8 digits_latter;//小数点前位数
+	u8 digits_former;//小数点后位数
+	
+}GUI_msg_num;
+
+typedef struct GUI_msg_str_TypeDef
+{
+	char* header;
+	char* content;
+	u8 size;
+	
+	u8 digits_header;//标题长度
+	u8 digits_content;//内容长度
+	
+}GUI_msg_str;
 
 typedef struct GUI_MsgWindow_InitTypeDef
 {
-	u16 msg_num;
+	//视窗大小
+	u16 start_xcoord;
+	u16 start_ycoord;
+	u16 end_xcoord;
+	u16 end_ycoord;
+	u16 back_color;
+	
+	u8 alignment;
+	u16 axle;
+	/*---------------
+	对齐方式
+	0：左对齐
+	中对齐
+	----------------*/
+	
+	u16 num;
+	u16 header_color;
+	u16 msg_color;
+	GUI_msg_num* msgs_num;
+	GUI_msg_str* msgs_str;
 	
 }GUI_MW_InitTypeDef;
 

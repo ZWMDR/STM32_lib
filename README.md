@@ -35,3 +35,7 @@
     - 红外遥控
     - 自定义按键功能
 
+- **GUI_lib**
+    - 界面显示函数
+    - 波形视窗 WaveWindow
+    - 信息视窗 MsgWindow
