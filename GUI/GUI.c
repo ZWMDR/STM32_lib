@@ -274,7 +274,8 @@ void GUI_MsgWindow_Init(GUI_MW_InitTypeDef* GUI_MW)//信息视窗初始化
 			LCD_ShowString(xcoord-GUI_MW->msgs_str[i].digits_header*size,ycoord,180,GUI_MW->msgs_num[i].size,GUI_MW->msgs_num[i].size,(u8*)GUI_MW->msgs_str[i].header);
 			
 			POINT_COLOR=GUI_MW->msg_color;
-			LCD_ShowString(xcoord,ycoord,180,GUI_MW->msgs_num[i].size,GUI_MW->msgs_num[i].size,(u8*)GUI_MW->msgs_str[i].content);
+			LCD_ShowString(xcoord,ycoord,180,GUI_MW->msgs_num[i].size,GUI_MW->msgs_num[i].size,
+										(u8*)GUI_MW->msgs_str[i].content);
 		}
 	}
 	
@@ -351,84 +352,91 @@ void GUI_MsgWindow_refresh(GUI_MW_InitTypeDef *GUI_MW)
 			size=GUI_MW->msgs_str[i].size/2;
 			
 			POINT_COLOR=GUI_MW->msg_color;
-			LCD_ShowString(xcoord,ycoord,180,GUI_MW->msgs_num[i].size,GUI_MW->msgs_num[i].size,(u8*)GUI_MW->msgs_str[i].content);
+			LCD_ShowString(xcoord,ycoord,180,GUI_MW->msgs_num[i].size,GUI_MW->msgs_num[i].size,
+										(u8*)GUI_MW->msgs_str[i].content);
 		}
 	}
 }
 
+void GUI_show_frame(u8 frame_mode,u16 frame_color,u16 start_xcoord,u16 start_ycoord,u16 end_xcoord,u16 end_ycoord)
+{
+	POINT_COLOR=frame_color;
+	if(frame_mode==1)
+	{
+		draw_consistant_FullLine(start_xcoord,end_xcoord,start_ycoord);
+		draw_consistant_FullLine(start_xcoord,end_xcoord,end_ycoord);
+		draw_vconsistant_FullLine(start_xcoord,start_ycoord,end_ycoord);
+		draw_vconsistant_FullLine(end_xcoord,start_ycoord,end_ycoord);
+	}
+	else if(frame_mode==11)
+	{
+		draw_consistant_ImaginaryLine(start_xcoord,end_xcoord,start_ycoord);
+		draw_consistant_ImaginaryLine(start_xcoord,end_xcoord,end_ycoord);
+		draw_vconsistant_ImaginaryLine(start_xcoord,start_ycoord,end_ycoord);
+		draw_vconsistant_ImaginaryLine(end_xcoord,start_ycoord,end_ycoord);
+	}
+	else if(frame_mode==2)
+	{
+		draw_consistant_FullLine(start_xcoord,end_xcoord,start_ycoord);
+		draw_consistant_FullLine(start_xcoord,end_xcoord,start_ycoord+1);
+		draw_consistant_FullLine(start_xcoord,end_xcoord,end_ycoord);
+		draw_consistant_FullLine(start_xcoord,end_xcoord,end_ycoord-1);
+		draw_vconsistant_FullLine(start_xcoord,start_ycoord,end_ycoord);
+		draw_vconsistant_FullLine(start_xcoord+1,start_ycoord,end_ycoord);
+		draw_vconsistant_FullLine(end_xcoord,start_ycoord,end_ycoord);
+		draw_vconsistant_FullLine(end_xcoord-1,start_ycoord,end_ycoord);
+	}
+	else if(frame_mode==12)
+	{
+		draw_consistant_ImaginaryLine(start_xcoord,end_xcoord,start_ycoord);
+		draw_consistant_ImaginaryLine(start_xcoord,end_xcoord,start_ycoord+1);
+		draw_consistant_ImaginaryLine(start_xcoord,end_xcoord,end_ycoord);
+		draw_consistant_ImaginaryLine(start_xcoord,end_xcoord,end_ycoord-1);
+		draw_vconsistant_ImaginaryLine(start_xcoord,start_ycoord,end_ycoord);
+		draw_vconsistant_ImaginaryLine(start_xcoord+1,start_ycoord,end_ycoord);
+		draw_vconsistant_ImaginaryLine(end_xcoord,start_ycoord,end_ycoord);
+		draw_vconsistant_ImaginaryLine(end_xcoord-1,start_ycoord,end_ycoord);
+	}
+	else if(frame_mode==3)
+	{
+		draw_consistant_FullLine(start_xcoord,end_xcoord,start_ycoord);
+		draw_consistant_FullLine(start_xcoord,end_xcoord,start_ycoord+1);
+		draw_consistant_FullLine(start_xcoord,end_xcoord,start_ycoord+2);
+		draw_consistant_FullLine(start_xcoord,end_xcoord,end_ycoord);
+		draw_consistant_FullLine(start_xcoord,end_xcoord,end_ycoord-1);
+		draw_consistant_FullLine(start_xcoord,end_xcoord,end_ycoord-2);
+		draw_vconsistant_FullLine(start_xcoord,start_ycoord,end_ycoord);
+		draw_vconsistant_FullLine(start_xcoord+1,start_ycoord,end_ycoord);
+		draw_vconsistant_FullLine(start_xcoord+2,start_ycoord,end_ycoord);
+		draw_vconsistant_FullLine(end_xcoord,start_ycoord,end_ycoord);
+		draw_vconsistant_FullLine(end_xcoord-1,start_ycoord,end_ycoord);
+		draw_vconsistant_FullLine(end_xcoord-2,start_ycoord,end_ycoord);
+	}
+	else if(frame_mode==13)
+	{
+		draw_consistant_ImaginaryLine(start_xcoord,end_xcoord,start_ycoord);
+		draw_consistant_ImaginaryLine(start_xcoord,end_xcoord,start_ycoord+1);
+		draw_consistant_ImaginaryLine(start_xcoord,end_xcoord,start_ycoord+2);
+		draw_consistant_ImaginaryLine(start_xcoord,end_xcoord,end_ycoord);
+		draw_consistant_ImaginaryLine(start_xcoord,end_xcoord,end_ycoord-1);
+		draw_consistant_ImaginaryLine(start_xcoord,end_xcoord,end_ycoord-2);
+		draw_vconsistant_ImaginaryLine(start_xcoord,start_ycoord,end_ycoord);
+		draw_vconsistant_ImaginaryLine(start_xcoord+1,start_ycoord,end_ycoord);
+		draw_vconsistant_ImaginaryLine(start_xcoord+2,start_ycoord,end_ycoord);
+		draw_vconsistant_ImaginaryLine(end_xcoord,start_ycoord,end_ycoord);
+		draw_vconsistant_ImaginaryLine(end_xcoord-1,start_ycoord,end_ycoord);
+		draw_vconsistant_ImaginaryLine(end_xcoord-2,start_ycoord,end_ycoord);
+	}
+}
 
 u8 GUI_Menu_Init(GUI_Menu_InitTypeDef* Menu)//菜单显示初始化
 {
 	u8 i;
 	
 	LCD_Fill(Menu->start_xcoord,Menu->start_ycoord,Menu->end_xcoord,Menu->end_ycoord,Menu->back_color);
-	POINT_COLOR=Menu->frame_color;
-	if(Menu->frame_mode==1)
-	{
-		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord);
-		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord);
-		draw_vconsistant_FullLine(Menu->start_xcoord,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_FullLine(Menu->end_xcoord,Menu->start_ycoord,Menu->end_ycoord);
-	}
-	else if(Menu->frame_mode==11)
-	{
-		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord);
-		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord);
-		draw_vconsistant_ImaginaryLine(Menu->start_xcoord,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_ImaginaryLine(Menu->end_xcoord,Menu->start_ycoord,Menu->end_ycoord);
-	}
-	else if(Menu->frame_mode==2)
-	{
-		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord);
-		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord+1);
-		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord);
-		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord-1);
-		draw_vconsistant_FullLine(Menu->start_xcoord,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_FullLine(Menu->start_xcoord+1,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_FullLine(Menu->end_xcoord,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_FullLine(Menu->end_xcoord-1,Menu->start_ycoord,Menu->end_ycoord);
-	}
-	else if(Menu->frame_mode==12)
-	{
-		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord);
-		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord+1);
-		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord);
-		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord-1);
-		draw_vconsistant_ImaginaryLine(Menu->start_xcoord,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_ImaginaryLine(Menu->start_xcoord+1,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_ImaginaryLine(Menu->end_xcoord,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_ImaginaryLine(Menu->end_xcoord-1,Menu->start_ycoord,Menu->end_ycoord);
-	}
-	else if(Menu->frame_mode==3)
-	{
-		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord);
-		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord+1);
-		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord+2);
-		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord);
-		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord-1);
-		draw_consistant_FullLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord-2);
-		draw_vconsistant_FullLine(Menu->start_xcoord,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_FullLine(Menu->start_xcoord+1,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_FullLine(Menu->start_xcoord+2,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_FullLine(Menu->end_xcoord,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_FullLine(Menu->end_xcoord-1,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_FullLine(Menu->end_xcoord-2,Menu->start_ycoord,Menu->end_ycoord);
-	}
-	else if(Menu->frame_mode==13)
-	{
-		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord);
-		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord+1);
-		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->start_ycoord+2);
-		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord);
-		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord-1);
-		draw_consistant_ImaginaryLine(Menu->start_xcoord,Menu->end_xcoord,Menu->end_ycoord-2);
-		draw_vconsistant_ImaginaryLine(Menu->start_xcoord,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_ImaginaryLine(Menu->start_xcoord+1,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_ImaginaryLine(Menu->start_xcoord+2,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_ImaginaryLine(Menu->end_xcoord,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_ImaginaryLine(Menu->end_xcoord-1,Menu->start_ycoord,Menu->end_ycoord);
-		draw_vconsistant_ImaginaryLine(Menu->end_xcoord-2,Menu->start_ycoord,Menu->end_ycoord);
-	}
+	
+	if(Menu->show_frame)
+		GUI_show_frame(Menu->frame_mode,Menu->frame_color,Menu->start_xcoord,Menu->start_ycoord,Menu->end_xcoord,Menu->end_ycoord);
 	
 	for(i=0;i<Menu->table_num;i++)
 	{
@@ -449,5 +457,64 @@ u8 GUI_Menu_Init(GUI_Menu_InitTypeDef* Menu)//菜单显示初始化
 		LCD_ShowString(Menu->catalog_tables[i].xcoord,Menu->catalog_tables[i].ycoord,180,Menu->catalog_tables[i].size,Menu->catalog_tables[i].size,(u8*)(Menu->catalog_tables[i].content));
 	}
 	return 0;
+}
+
+u8 GUI_Menu_Select(GUI_Menu_InitTypeDef *Menu,u8 select_status)
+{
+	u8 i;
+	if(select_status>Menu->table_num)
+		return 0;
+	
+	if(select_status>0)
+	{
+		POINT_COLOR=Menu->select_point_color;
+		BACK_COLOR=Menu->select_back_color;
+		LCD_ShowString(Menu->catalog_tables[select_status-1].xcoord,Menu->catalog_tables[select_status-1].ycoord,
+										180,Menu->catalog_tables[select_status-1].size,Menu->catalog_tables[select_status-1].size,
+										(u8*)(Menu->catalog_tables[select_status-1].content));
+	}
+	POINT_COLOR=Menu->point_color;
+	BACK_COLOR=Menu->back_color;
+	for(i=0;i<Menu->table_num;i++)
+	{
+		if(i!=select_status-1)
+		{
+			LCD_ShowString(Menu->catalog_tables[i].xcoord,Menu->catalog_tables[i].ycoord,180,
+										Menu->catalog_tables[i].size,Menu->catalog_tables[i].size,
+										(u8*)(Menu->catalog_tables[i].content));
+		}
+	}
+	return 1;
+}
+
+
+void GUI_InputBox_Init(GUI_IB_InitTypeDef* GUI_IB,u8 select_status)
+{
+	u8 i;
+	u8 num=GUI_IB->digit_fromer+GUI_IB->digit_later;
+	u16 xcoord=GUI_IB->xcoord;
+	LCD_Fill(GUI_IB->start_xcoord,GUI_IB->start_ycoord,GUI_IB->end_xcoord,GUI_IB->end_ycoord,GUI_IB->back_color);
+	if(GUI_IB->show_frame)
+		GUI_show_frame(GUI_IB->frame_mode,GUI_IB->back_color,GUI_IB->start_xcoord,GUI_IB->start_ycoord,GUI_IB->end_xcoord,GUI_IB->end_ycoord);
+	
+	POINT_COLOR=GUI_IB->header_color;
+	LCD_ShowString(xcoord,GUI_IB->ycoord,180,GUI_IB->size,GUI_IB->size,(u8*)(GUI_IB->header));
+	xcoord+=GUI_IB->digit_header*GUI_IB->size/2;
+	for(i=0;i<GUI_IB->digit_fromer;i++)
+	{
+		if(select_status==i)
+		{
+			POINT_COLOR=GUI_IB->select_point_color;
+			BACK_COLOR=GUI_IB->select_back_color;
+		}
+		
+		LCD_ShowNum(xcoord,GUI_IB->ycoord,GUI_IB->digits[i],1,GUI_IB->size);
+		
+		if(select_status==i)
+		{
+			POINT_COLOR=GUI_IB->digits_color;
+			BACK_COLOR=GUI_IB->back_color;
+		}
+	}
 }
 

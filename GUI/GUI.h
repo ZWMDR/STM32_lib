@@ -5,20 +5,20 @@
 
 /*--------------------波形显示视窗------------------------*/
 
-typedef struct GUI_WaveWindow_msg
+typedef struct GUI_WaveWindow_msg//波形参数
 {
 	u16 lst_xcoord;
 	u16 lst_ycoord;
 	u16 xcoord;
 	u16 ycoord;
-	u8 show;
+	u8 show;//是否需要显示（更新）
 }WW_msg;
 
 typedef struct GUI_waveform_InitTypeDef//波形显示参数
 {
-	u16 point_color;
-	u8 wave_form;
-	u8 refresh_type;
+	u16 point_color;//波形颜色
+	u8 wave_form;//波形
+	u8 refresh_type;//刷新方式
 	
 	WW_msg msg;
 	
@@ -177,6 +177,39 @@ typedef struct GUI_Menu_InitTypeDef
 	
 }GUI_Menu_InitTypeDef;
 
+
+/*---------------------输入框------------------------*/
+
+typedef struct GUI_InputBox_InitTypeDef
+{
+	u16 start_xcoord;
+	u16 start_ycoord;
+	u16 end_xcoord;
+	u16 end_ycoord;
+	
+	u16 back_color;
+	u16 point_color;
+	u16 select_back_color;
+	u16 select_point_color;
+	
+	u8 show_frame;
+	u8 frame_mode;
+	u16 frame_color;
+	
+	char* header;
+	u8 digit_header;
+	u8 digit_fromer;
+	u8 digit_later;
+	u8* digits;
+	u8 size;
+	u16 header_color;
+	u16 digits_color;
+	u16 xcoord;
+	u16 ycoord;
+	float number;
+	
+}GUI_IB_InitTypeDef;
+
 void GUI_Init(void);//初始化
 void GUI_clear(void);//清屏
 
@@ -190,6 +223,14 @@ void GUI_MsgWindow_refresh(GUI_MW_InitTypeDef *GUI_MW);//GUI信息视窗刷新
 
 
 //菜单
+
+
+//选择菜单
 u8 GUI_Menu_Init(GUI_Menu_InitTypeDef* Menu);//菜单初始化
+u8 GUI_Menu_Select(GUI_Menu_InitTypeDef *Menu,u8 select_status);//菜单选择
+
+//输入框
+void GUI_InputBox_Init(GUI_IB_InitTypeDef* GUI_IB,u8 select_status);
+
 
 #endif

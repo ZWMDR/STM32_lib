@@ -1,6 +1,7 @@
 #include "infrared_remote.h"
 
 u16 zoom[3]={0,10,100};
+u16 zooms[5]={1,10,100,1000,10000};
 
 void IR_Init(void)
 {
@@ -243,7 +244,7 @@ u8 IR_read(u8* IR_instruct)
 	}
 }
 
-/*-----------------------
+/*------------------
 IR_instructs:
 0: Êý×Ö0
 1: Êý×Ö1
@@ -267,11 +268,11 @@ IR_instructs:
 21£ºVOL+
 22£ºVOL-
 23£ºALIENTEK
--------------------------*/
+-------------------*/
 
 
 void IR_Menu_Promote_upgrade(GUI_Menu_InitTypeDef* Menu,IR_Menu_InitTypeDef* IR_Menu,u8 up_down)//²Ëµ¥µÈ¼¶¸ü¸Ä
-	//up_down>0:Éý¼¶£»up_down=0:½µ¼¶
+//up_down>0:Éý¼¶£»up_down=0:½µ¼¶
 {
 	if(up_down && IR_Menu->level<IR_Menu->max_level)//Éý¼¶
 	{
@@ -292,8 +293,8 @@ void IR_Menu_Promote_upgrade(GUI_Menu_InitTypeDef* Menu,IR_Menu_InitTypeDef* IR_
 	{
 		if(IR_Menu->promote_rule==0 && IR_Menu->level>1)
 		{
-			IR_Menu->select_status=IR_Menu->status/=10;
-			IR_Menu->status=zoom[IR_Menu->level-1];
+			IR_Menu->status/=10;
+			IR_Menu->select_status=IR_Menu->status;
 			IR_Menu->level--;
 		}
 		else if(IR_Menu->promote_rule==1 && IR_Menu->level>1)
@@ -306,17 +307,12 @@ void IR_Menu_Promote_upgrade(GUI_Menu_InitTypeDef* Menu,IR_Menu_InitTypeDef* IR_
 
 void IR_Menu_Promote(GUI_Menu_InitTypeDef* Menu,IR_Menu_InitTypeDef* IR_Menu,u8 IR_instruct)//²Ëµ¥¸ü¸Ä
 {
-	if(IR_instruct<10)
-	{
-		if(IR_instruct<=Menu->table_num)//°´ÏÂÊý×Ö£¬ÇÒÊý×ÖÐ¡ÓÚµÈÓÚ²Ëµ¥ÊýÄ¿
-			IR_Menu->select_status=IR_instruct;
-	}
-	else if(10<IR_instruct && IR_instruct<15)
+	if(10<IR_instruct && IR_instruct<15)
 	{
 		if(IR_instruct==11)//ÉÏ
 		{
-			if(IR_Menu->select_status>1)
-				IR_Menu->select_status++;
+			if(IR_Menu->select_status>IR_Menu->status+1)
+				IR_Menu->select_status--;
 			else
 				IR_Menu->select_status=Menu->table_num;
 		}
@@ -333,6 +329,7 @@ void IR_Menu_Promote(GUI_Menu_InitTypeDef* Menu,IR_Menu_InitTypeDef* IR_Menu,u8 
 		}
 		else if(IR_instruct==14)//ÓÒ
 		{
+			IR_Menu->status=IR_Menu->select_status;
 			IR_Menu_Promote_upgrade(Menu,IR_Menu,1);
 		}
 	}
@@ -344,12 +341,42 @@ void IR_Menu_Promote(GUI_Menu_InitTypeDef* Menu,IR_Menu_InitTypeDef* IR_Menu,u8 
 	else if(IR_instruct==10)//·µ»Ø³õÊ¼²Ëµ¥(POWER)
 	{
 		IR_Menu->select_status=IR_Menu->status=0;
+		IR_Menu->level=1;
 	}
 	
 }
 
+void IR_input(IR_IB_Msg* IB_Msg,u8 IR_instruct)
+{
+	if(IR_instruct<10)
+	{
+		IB_Msg->GUI_IB->digits[IB_Msg->select_status]=IR_instruct;
+		if(IB_Msg->select_status<IB_Msg->GUI_IB->digit_fromer+IB_Msg->GUI_IB->digit_later)
+			IB_Msg->select_status++;
+	}
+	else if(IR_instruct==15)//È·¶¨
+	{
+		IB_Msg->select=1;
+		IB_Msg->GUI_IB->number=IR_IB_number_assign(IB_Msg);
+	}
+	else if(IR_instruct==13)//×ó
+	{
+		if(IB_Msg->select_status>0)
+			IB_Msg->select_status--;
+		else
+			IB_Msg->select_status=IB_Msg->GUI_IB->digit_fromer+IB_Msg->GUI_IB->digit_later-1;
+	}
+	else if(IR_instruct==14)//ÓÒ
+	{
+		if(IB_Msg->select_status<IB_Msg->GUI_IB->digit_fromer+IB_Msg->GUI_IB->digit_later)
+			IB_Msg->select_status++;
+		else
+			IB_Msg->select_status=0;
+	}
+	
+}
 
-u8 IR_Menu_selet(GUI_Menu_InitTypeDef* Menu,IR_Menu_InitTypeDef* IR_Menu)//²Ëµ¥ÏÔÊ¾
+u8 IR_Menu_selet(GUI_Menu_InitTypeDef* Menu,IR_Menu_InitTypeDef* IR_Menu)//²Ëµ¥
 {
 	u8 IR_instruct;
 	u8 IR_key=IR_read(&IR_instruct);
@@ -360,4 +387,32 @@ u8 IR_Menu_selet(GUI_Menu_InitTypeDef* Menu,IR_Menu_InitTypeDef* IR_Menu)//²Ëµ¥Ï
 	return 1;
 }
 
+u8 IR_Input_Box_select(IR_IB_Msg* IB_Msg)
+{
+	u8 IR_instruct;
+	u8 IR_key=IR_read(&IR_instruct);
+	if(!IR_key)
+		return 0;
+	
+	IR_input(IB_Msg,IR_instruct);
+	return 1;
+}
+
+float IR_IB_number_assign(IR_IB_Msg* IB_Msg)
+{
+	float decimals=0;
+	u16 integer=0;
+	u8 i;
+	u8 count=IB_Msg->GUI_IB->digit_fromer-1;
+	
+	for(i=0;i<IB_Msg->GUI_IB->digit_later;i++)
+	{
+		decimals+=IB_Msg->GUI_IB->digits[i+IB_Msg->GUI_IB->digit_fromer-1]*pow(0.1,i+1);
+	}
+	for(i=0;i<IB_Msg->GUI_IB->digit_fromer;i++)
+	{
+		integer+=IB_Msg->GUI_IB->digits[i]*zooms[count--];
+	}
+	return decimals+integer;
+}
 
