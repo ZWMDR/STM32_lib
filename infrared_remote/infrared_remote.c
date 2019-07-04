@@ -348,7 +348,7 @@ void IR_Menu_Promote(GUI_Menu_InitTypeDef* Menu,IR_Menu_InitTypeDef* IR_Menu,u8 
 
 void IR_input(IR_IB_Msg* IB_Msg,u8 IR_instruct)
 {
-	if(IR_instruct<10)
+	if(IR_instruct<10 || IB_Msg->select==0)
 	{
 		IB_Msg->GUI_IB->digits[IB_Msg->select_status]=IR_instruct;
 		if(IB_Msg->select_status<IB_Msg->GUI_IB->digit_fromer+IB_Msg->GUI_IB->digit_later)
@@ -361,6 +361,7 @@ void IR_input(IR_IB_Msg* IB_Msg,u8 IR_instruct)
 	}
 	else if(IR_instruct==13)//左
 	{
+		IB_Msg->select=0;
 		if(IB_Msg->select_status>0)
 			IB_Msg->select_status--;
 		else
@@ -368,6 +369,7 @@ void IR_input(IR_IB_Msg* IB_Msg,u8 IR_instruct)
 	}
 	else if(IR_instruct==14)//右
 	{
+		IB_Msg->select=0;
 		if(IB_Msg->select_status<IB_Msg->GUI_IB->digit_fromer+IB_Msg->GUI_IB->digit_later)
 			IB_Msg->select_status++;
 		else
@@ -379,22 +381,22 @@ void IR_input(IR_IB_Msg* IB_Msg,u8 IR_instruct)
 u8 IR_Menu_selet(GUI_Menu_InitTypeDef* Menu,IR_Menu_InitTypeDef* IR_Menu)//菜单
 {
 	u8 IR_instruct;
-	u8 IR_key=IR_read(&IR_instruct);
+	u8 IR_key=IR_read(&IR_instruct);//指令读取
 	if(!IR_key)
 		return 0;
 	
-	IR_Menu_Promote(Menu,IR_Menu,IR_instruct);
+	IR_Menu_Promote(Menu,IR_Menu,IR_instruct);//指令处理
 	return 1;
 }
 
 u8 IR_Input_Box_select(IR_IB_Msg* IB_Msg)
 {
 	u8 IR_instruct;
-	u8 IR_key=IR_read(&IR_instruct);
+	u8 IR_key=IR_read(&IR_instruct);//指令读取
 	if(!IR_key)
 		return 0;
 	
-	IR_input(IB_Msg,IR_instruct);
+	IR_input(IB_Msg,IR_instruct);//指令处理
 	return 1;
 }
 
