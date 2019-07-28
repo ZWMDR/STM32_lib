@@ -118,6 +118,15 @@ typedef struct AD7705_InitTypeDef
 	
 }AD7705_InitTypeDef;
 
+#define _20Hz   0x10
+#define _25Hz   0x20
+#define _50Hz   0x30
+#define _60Hz   0x40
+#define _100Hz 0x50
+#define _200Hz 0x60
+#define _250Hz 0x70
+#define _500Hz 0x80
+
 
 //端口读写
 void GPIO_Set_High(AD7705_GPIO* GPIO);
@@ -134,7 +143,7 @@ void AD7705_SysCalibration(SPI_TypeDef* SPIx,u8 ch);//零刻度校准（手动短接AIN+ A
 void AD7705_FullCalibration(SPI_TypeDef* SPIx,u8 ch);//满刻度校准（手动将AIN+ AIN-接入最大电压）
 
 //初始化函数
-void AD7705_Init(AD7705_InitTypeDef* AD7705);
+void AD7705_Init(AD7705_InitTypeDef* AD7705,u8 refresh_speed);
 
 //外部中断配置函数
 void AD7705_EXTI_Init(AD7705_InitTypeDef* AD7705);

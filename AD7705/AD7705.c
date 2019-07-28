@@ -139,7 +139,7 @@ void AD7705_FullCalibration(SPI_TypeDef* SPIx,u8 ch)
 }
 
 
-void AD7705_Init(AD7705_InitTypeDef* AD7705)
+void AD7705_Init(AD7705_InitTypeDef* AD7705,u8 refresh_speed)
 {
 	SPI_InitTypeDef  SPI_InitStructure;
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -197,11 +197,90 @@ void AD7705_Init(AD7705_InitTypeDef* AD7705)
 	
 	//AD7705寄存器配置
 	GPIO_Set_Low(AD7705->CS);
-	AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_1);//设置通信寄存器，对时钟寄存器进行操作
-	AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_50HZ);
-	//delay_ms(5);
-	AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_2);//设置通信寄存器，对时钟寄存器进行操作
-	AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_50HZ);
+	switch(refresh_speed)
+	{
+		case _20Hz:
+		{
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_1);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_20HZ);
+				
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_2);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_20HZ);
+			break;
+		}
+		case _25Hz:
+		{
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_1);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_25HZ);
+				
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_2);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_25HZ);
+			break;
+		}
+		case _50Hz:
+		{
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_1);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_50HZ);
+				
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_2);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_50HZ);
+			break;
+		}
+		case _60Hz:
+		{
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_1);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_60HZ);
+				
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_2);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_60HZ);
+			break;
+		}
+		case _100Hz:
+		{
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_1);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_100HZ);
+				
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_2);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_100HZ);
+			break;
+		}
+		case _200Hz:
+		{
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_1);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_200HZ);
+				
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_2);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_200HZ);
+			break;
+		}
+		case _250Hz:
+		{
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_1);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_250HZ);
+				
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_2);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_250HZ);
+			break;
+		}
+		case _500Hz:
+		{
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_1);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_500HZ);
+				
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_2);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_500HZ);
+			break;
+		}
+		default:
+		{
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_1);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_50HZ);
+				
+			AD7705_ReadWriteByte(AD7705->SPIx,REG_CLOCK|WRITE|CH_2);//设置通信寄存器，对时钟寄存器进行操作
+			AD7705_ReadWriteByte(AD7705->SPIx,CLKDIS_0|CLK_4_9152M|FS_50HZ);
+			break;
+		}
+	}
 	GPIO_Set_High(AD7705->CS);
 	delay_ms(5);
 	
